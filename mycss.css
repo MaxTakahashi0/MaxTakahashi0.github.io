@@ -1,5 +1,10 @@
 body {
-	background color: lightblue;
+  background-color: lightblue;
+  background-image: url("gradient_bg.png");
+  p.dotted {border-style: dotted;}
 }
-hl {
-	font-size
+
+h1 {
+  color: navy;
+  margin-left: 20px;
+}
