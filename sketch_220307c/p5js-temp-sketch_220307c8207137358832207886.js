@@ -5,7 +5,7 @@ function draw() {
 background(51, 0, 13);
 
 beginShape(); //hair back
-strokeWeight(300);
+strokeWeight(370);
 stroke(253, 241, 235);
 fill(162, 107, 62);
 vertex(200, 0);
@@ -41,7 +41,7 @@ vertex(600, 0);
 endShape(CLOSE);
   
 beginShape(); //hair back
-strokeWeight(170);
+strokeWeight(200);
 stroke(253, 241, 235);
 fill(162, 107, 62);
 vertex(200, 0);
@@ -61,6 +61,24 @@ endShape(CLOSE);
 beginShape(); //hair back
 strokeWeight(150);
 stroke(51, 0, 13);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+
+beginShape(); //hair back
+strokeWeight(100);
+stroke(253, 241, 235);
 fill(162, 107, 62);
 vertex(200, 0);
 vertex(100, 100);
