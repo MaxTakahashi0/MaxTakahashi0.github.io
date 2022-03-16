@@ -1,5 +1,5 @@
 var img;
-var initials ='mt'; // your initials
+var initials ='jm'; // your initials
 var choice = '1'; // starting choice, so it is not empty
 var screenbg = 250; // off white background
 var lastscreenshot=61; // last screenshot never taken
@@ -8,7 +8,7 @@ function preload() {
 // preload() runs once, it may make you wait
 //  img = loadImage('cat.jpg');  // cat.jpg needs to be next to this .js file
 // you can link to an image on your github account
-  img = loadImage('https://github.com/MaxTakahashi0/MaxTakahashi0.github.io/blob/main/kermie.png');
+  img = loadImage('https://dma-git.github.io/images/74.png');
 }
 
 function setup() {
@@ -33,56 +33,48 @@ function newkeyChoice(toolChoice) { //toolchoice is the key that was pressed
   // graphic function
 
  if (toolChoice == '1' ) {  // first tool
-      
-    strokeWeight(10)
-    stroke(mouseX/2, mouseY*1, pmouseY);
+   
+    stroke(01);
     line(mouseX, mouseY, pmouseX, pmouseY);
     
   } else if (toolChoice == '2') { // second tool
 
-    fill(0, 10, 100);
-    stroke(0, 250, 250);
-    strokeWeight(10)
-    rect(10, 10, mouseX, mouseY);
-    
+    stroke(20);
+    line(mouseX, mouseY, pmouseX, pmouseY);
   } else if (toolChoice == '3') { // third tool
 
-    stroke(1, mouseX, 0,);
-    
+    stroke(300, 100, 0, 80);
     line(mouseX, mouseY, pmouseX, pmouseY);
   } else if (toolChoice == '4') {
 
     stroke(0, 0, 255);
-    line(2, 1, pmouseX, pmouseY);
-    
+    line(mouseX, mouseY, pmouseX, pmouseY);
   } else if (key == '5') { // this tool calls a function
     stroke(0, 0, 255);
-    testbox(20, 20, 50);
-    testbox(0, 20, 20);
+    testbox(20, 20, 200);
+    testbox(200, 20, 20);
     
  // make testbox do something!
  //   line(mouseX, mouseY, pmouseX, pmouseY);
   } else if (toolChoice == '6') {
-    stroke(200, 200, 20);
-    fill(200, 250, 250);
-    arc(mouseX, mouseY, 160, 150, 2.64, 3.51);
+
+    stroke(200);
+    line(mouseX, mouseY, pmouseX, pmouseY);
   } else if (toolChoice == '7') {
 
-    fill(0, 200, 100);
-    stroke(250, 250, 250);
-    strokeWeight(10)
-    rect(mouseX, mouseY, mouseX, mouseY);
+    fill(100, 200, 100);
+    rect(mouseX, mouseY, 20, 20);
   } else if (toolChoice == '8') {
 
     fill(300, 100, 0, 80);
-    ellipse(mouseX, mouseY, 80, 60)
+    rect(mouseX, mouseY, 20, 20);
   } else if (toolChoice == '9') {
 
-    fill(300, mouseY, 0, mouseX);
-    rect(mouseX, 0, mouseY, 40);
+    fill(300, 100, 0, 80);
+    rect(mouseX, mouseY, 40, 40);
   } else if (toolChoice == '0') {
-    stroke(0, 0)
-    fill(random(10), random(30), random(1000), random(20));
+    stroke(0, 0);
+    fill(random(255), random(255), random(255), random(255));
     rect(mouseX, mouseY, 200, 150);
   } else if (toolChoice == 'g' || toolChoice == 'G') { // g places the image we pre-loaded
     image(img, mouseX, mouseY);

@@ -8,7 +8,7 @@ function preload() {
 // preload() runs once, it may make you wait
 //  img = loadImage('cat.jpg');  // cat.jpg needs to be next to this .js file
 // you can link to an image on your github account
-  img = loadImage('https://dma-git.github.io/images/74.png');
+  img = loadImage('kermie2.png');
 }
 
 function setup() {
@@ -85,7 +85,7 @@ function newkeyChoice(toolChoice) { //toolchoice is the key that was pressed
     fill(random(255), random(255), random(255), random(255));
     rect(mouseX, mouseY, 200, 150);
   } else if (toolChoice == 'g' || toolChoice == 'G') { // g places the image we pre-loaded
-    image(img, mouseX, mouseY);
+    image(img, mouseX-50, mouseY-25);
     
   }
  }
