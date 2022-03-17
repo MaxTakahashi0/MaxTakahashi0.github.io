@@ -8,7 +8,7 @@ function preload() {
 // preload() runs once, it may make you wait
 //  img = loadImage('cat.jpg');  // cat.jpg needs to be next to this .js file
 // you can link to an image on your github account
-  img = loadImage('https://maxtakahashi0.github.io/kermie.png');
+  img = loadImage('ye/kermie.png');
 }
 
 function setup() {
