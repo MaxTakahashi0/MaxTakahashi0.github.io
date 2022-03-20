@@ -8,7 +8,7 @@ function preload() {
 // preload() runs once, it may make you wait
 //  img = loadImage('cat.jpg');  // cat.jpg needs to be next to this .js file
 // you can link to an image on your github account
-  img = loadImage('https://maxtakahashi0.github.io/kermie.png');
+  img = loadImage('https://maxtakahashi0.github.io/confetti.png');
 }
 
 function setup() {
@@ -34,58 +34,68 @@ function newkeyChoice(toolChoice) { //toolchoice is the key that was pressed
 
  if (toolChoice == '1' ) {  // first tool
       
-    strokeWeight(10)
-    stroke(mouseX/2, mouseY*1, pmouseY);
-    line(mouseX, mouseY, pmouseX, pmouseY);
-    
-  } else if (toolChoice == '2') { // second tool
-
     fill(0, 10, 100);
     stroke(0, 250, 250);
     strokeWeight(10)
-    rect(10, 10, mouseX, mouseY);
+    rect(0, 0, mouseX, mouseY);
+    
+  } else if (toolChoice == '2') { // second tool
+
+    strokeWeight(10)
+    stroke(mouseX/2, 0, mouseY/1);
+    line(mouseX, mouseY, pmouseX, pmouseY);
     
   } else if (toolChoice == '3') { // third tool
 
-    stroke(100, 30, 0,);
+    strokeWeight(25)
+    stroke(mouseX, 0, pmouseX,);
+    textSize(32);
+    fill(250, 250, 250);
+    text('WOOOOO!', mouseX, pmouseY);
     
-    line(mouseX, mouseY, pmouseX, pmouseY);
   } else if (toolChoice == '4') {
-
-    stroke(0, 0, 255);
+    strokeWeight(25)
+    stroke(random(101), 0, 255);
     line(mouseX, mouseY, pmouseX, pmouseY);
     
   } else if (key == '5') { // this tool calls a function
-    stroke(0, 0, 255);
-    testbox(20, 20, 200);
-    testbox(200, 20, 20);
+    strokeWeight(5)
+    stroke(100, 20, 210);
+    fill(90, 10, 200);
+    ellipse(mouseX, mouseY, 70, 90)
     
  // make testbox do something!
  //   line(mouseX, mouseY, pmouseX, pmouseY);
   } else if (toolChoice == '6') {
-    stroke(200, 200, 20);
-    fill(200, 250, 250);
+    strokeWeight(10)
+    stroke(188, 126, 77);
+    fill(230, 211, 116);
     arc(mouseX, mouseY, 160, 150, 2.64, 3.51);
   } else if (toolChoice == '7') {
 
-    fill(0, 200, 100);
-    stroke(250, 250, 250);
+    fill(0, 0, 100);
+    stroke(0, 10, 250);
     strokeWeight(10)
     rect(mouseX, mouseY, mouseX, mouseY);
   } else if (toolChoice == '8') {
 
-    fill(300, 100, 0, 80);
-    ellipse(mouseX, mouseY, 80, 60)
+    stroke(250, 250, 250);
+    strokeWeight(2);
+    fill(0);
+    textSize(60);
+    text('Happy Birthday!', mouseX, mouseY);
+    fill(0, 20);
   } else if (toolChoice == '9') {
 
     fill(300, 100, 0, 80);
     rect(mouseX, mouseY, 40, 40);
   } else if (toolChoice == '0') {
-    stroke(0, 0)
-    fill(random(255), random(255), random(255), random(255));
-    rect(mouseX, mouseY, 200, 150);
-  } else if (toolChoice == 'g' || toolChoice == 'G') { // g places the image we pre-loaded
     image(img, mouseX-50, mouseY-25);
+    
+  } else if (toolChoice == 'g' || toolChoice == 'G') { // g places the image we pre-loaded
+    stroke(250, 250, 250);
+    fill(250, 250, 250);
+    rect(0, 0, 600, 600)
     
   }
  }

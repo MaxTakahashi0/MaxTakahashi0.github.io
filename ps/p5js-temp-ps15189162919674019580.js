@@ -8,7 +8,7 @@ function preload() {
 // preload() runs once, it may make you wait
 //  img = loadImage('cat.jpg');  // cat.jpg needs to be next to this .js file
 // you can link to an image on your github account
-  img = loadImage('https://maxtakahashi0.github.io/kermie.png');
+  img = loadImage('https://maxtakahashi0.github.io/confetti.png');
 }
 
 function setup() {
@@ -60,7 +60,7 @@ function newkeyChoice(toolChoice) { //toolchoice is the key that was pressed
     
   } else if (key == '5') { // this tool calls a function
     strokeWeight(5)
-    stroke(0, 0, 10);
+    stroke(100, 20, 210);
     fill(90, 10, 200);
     ellipse(mouseX, mouseY, 70, 90)
     
@@ -73,8 +73,8 @@ function newkeyChoice(toolChoice) { //toolchoice is the key that was pressed
     arc(mouseX, mouseY, 160, 150, 2.64, 3.51);
   } else if (toolChoice == '7') {
 
-    fill(0, 200, 100);
-    stroke(250, 250, 250);
+    fill(0, 0, 100);
+    stroke(0, 10, 250);
     strokeWeight(10)
     rect(mouseX, mouseY, mouseX, mouseY);
   } else if (toolChoice == '8') {
@@ -90,11 +90,12 @@ function newkeyChoice(toolChoice) { //toolchoice is the key that was pressed
     fill(300, 100, 0, 80);
     rect(mouseX, mouseY, 40, 40);
   } else if (toolChoice == '0') {
-    stroke(0, 0)
-    fill(random(255), random(255), random(255), random(255));
-    rect(mouseX, mouseY, 200, 150);
-  } else if (toolChoice == 'g' || toolChoice == 'G') { // g places the image we pre-loaded
     image(img, mouseX-50, mouseY-25);
+    
+  } else if (toolChoice == 'g' || toolChoice == 'G') { // g places the image we pre-loaded
+    stroke(250, 250, 250);
+    fill(250, 250, 250);
+    rect(0, 0, 600, 600)
     
   }
  }
