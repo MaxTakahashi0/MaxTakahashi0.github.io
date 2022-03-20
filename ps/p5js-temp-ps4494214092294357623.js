@@ -88,7 +88,7 @@ function newkeyChoice(toolChoice) { //toolchoice is the key that was pressed
   } else if (toolChoice == '9') {
 
     fill(300, 100, 0, 80);
-    rect(mouseX, mouseY, 40, 40);
+    ellipse(mouseX, mouseY, 5, 5);
   } else if (toolChoice == '0') {
     image(img, mouseX-50, mouseY-25);
     
