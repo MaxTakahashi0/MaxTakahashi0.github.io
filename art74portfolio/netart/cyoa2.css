@@ -1,0 +1,46 @@
+body {
+  background-color: black;
+  background-image: url("door2.png");
+  background-repeat: repeat;
+  background-position: center;
+}
+
+p {
+  font-family: Tahoma;
+  font-size: 30px;
+  color: white;
+  position: static;
+  font-style: italic;
+  text-align: center;
+  margin-left: 20px;
+}
+
+h1 {
+  font-family: Tahoma;
+  color: red;
+  position: static;
+  text-align: center;
+  margin-left: 20px;
+}
+
+h2 {
+  font-family: Tahoma;
+  color: red;
+  position: static;
+  font-style: italic;
+  margin-left: 20px;
+}
+
+h3 {
+  font-family: Tahoma;
+  font-size: 30px;
+  color: red;
+  position: static;
+  text-align: center;
+  margin-left: 20px;
+}
+
+a:link { text-decoration: none;   color: white;  }
+a:visited { text-decoration: none;   color: white;  }
+a:hover { text-decoration: none;   color: white;  }
+a:active { text-decoration: none;   color: white;  }
