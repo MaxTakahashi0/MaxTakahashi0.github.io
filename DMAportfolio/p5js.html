@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>P5js Self Portrait - Max Takahashi</title>
+
+ <!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> 
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body>
+
+<nav class="navbar navbar-expand-sm bg-light navbar-light">
+ <ul class="navbar-nav">
+ 	<li class="nav-item"><a class="nav-link" href="index.html">home</a></li>
+	<li class="nav-item"><a class="nav-link" href="glitch.html">glitch</a></li>
+	<li class="nav-item"><a class="nav-link" href="mememashup.html">meme</a></li>
+    	<li class="nav-item"><a class="nav-link" href="p5js.html">p5js selfie</a></li>
+	<li class="nav-item"><a class="nav-link" href="diyps.html">diyps</a></li>
+    	<li class="nav-item"><a class="nav-link" href="netart.html">net-art</a></li>
+   	<li class="nav-item"><a class="nav-link" href="sculpture.html">minecraft</a></li>
+   	<li class="nav-item"><a class="nav-link" href="print.html">3D printing</a></li>
+   	<li class="nav-item"><a class="nav-link" href="game.html">p5 game</a></li>
+   	<li class="nav-item"><a class="nav-link" href="tragedy.html">tragedy</a></li>
+ 
+</ul> 
+</nav>
+
+
+<div class="container-fluid">
+
+<h2>P5js Self Portrait.</h2>
+
+<iframe src="sketch_220312c/index.html" height="600" width="600" title="Iframe Example"></iframe>
+
+<p>This image was made purely with programming on P5. This means that every vertex and color code was inputted manually and when executed, the code produces this image. This was meant to be a self-portrait that emulates a bit of my own personal flair.</p>
+
+<br>
+
+<h3>
+Input this code and try it yourself!
+</h3>
+
+<br>
+
+<pre>
+<p>
+​
+function setup() {
+createCanvas(600, 600);
+}
+function draw() {
+background(51, 0, 13);
+beginShape(); //bg 1
+strokeWeight(300);
+stroke(253, 241, 235);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+beginShape(); //bg 2
+strokeWeight(270);
+stroke(51, 0, 13);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+  
+beginShape(); //bg 3
+strokeWeight(170);
+stroke(253, 241, 235);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+beginShape(); //bg 4
+strokeWeight(150);
+stroke(51, 0, 13);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+beginShape(); //bg 5
+strokeWeight(80);
+stroke(51, 0, 13);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+beginShape(); //bg 6
+strokeWeight(50);
+stroke(253, 241, 235);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+beginShape(); //bg 7
+strokeWeight(40);
+stroke(51, 0, 13);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+beginShape(); //hair back
+strokeWeight(4);
+stroke(122, 82, 50);
+fill(162, 107, 62);
+vertex(200, 0);
+vertex(100, 100);
+vertex(90, 240);
+vertex(230, 540);
+vertex(235, 500);
+vertex(150, 300);
+vertex(240, 500);
+vertex(260, 480);
+vertex(240, 420);
+vertex(270, 480);
+vertex(500, 450);
+vertex(600, 0);
+endShape(CLOSE);
+fill(243, 211, 170);
+strokeWeight(4);
+stroke(122, 82, 50);
+beginShape(); //neck
+vertex(410, 520);
+vertex(440, 560);
+vertex(460, 600);
+vertex(600, 600);
+vertex(600, 0);
+endShape(CLOSE);
+fill(241, 221, 196);
+beginShape(); //face
+vertex(350, -10);
+vertex(300, 50);
+vertex(280, 100);
+vertex(260, 170);
+vertex(270, 290);
+vertex(220, 380); //nose
+vertex(235, 393); //nose
+vertex(270, 399);
+vertex(280, 410);
+vertex(270, 432);
+vertex(290, 445);
+vertex(280, 465);
+vertex(300, 480);
+vertex(320, 525);
+vertex(350, 550);
+vertex(400, 550);
+vertex(520, 510);
+vertex(600, 400);
+vertex(600, 0);
+endShape(CLOSE);
+beginShape(); //sclera
+noStroke(); 
+fill(250, 250, 250);
+arc(380, 260, 160, 150, 2.64, 3.51);
+endShape(CLOSE);
+beginShape(); //iris
+fill(0, 160, 170);
+ellipse(310, 265, 20, 60);
+endShape(CLOSE);
+beginShape(); //pupil
+fill(0, 0, 0);
+ellipse(312, 265, 10, 30);
+endShape(CLOSE);
+beginShape(); //shine
+fill(250, 250, 250);
+ellipse(327, 255, 30, 10);
+endShape(CLOSE);
+beginShape(); //shine
+fill(250, 250, 250);
+ellipse(317, 265, 3, 3);
+endShape(CLOSE);
+beginShape(); //lash
+strokeWeight(4);
+fill(0, 0, 0);
+vertex(300, 240);
+vertex(290, 224);
+vertex(379, 260);
+endShape();
+beginShape(); //brow
+fill(88, 68, 52);
+vertex(290, 220);
+vertex(280, 204);
+vertex(349, 170);
+vertex(349, 170);
+vertex(369, 180);
+endShape(CLOSE);
+beginShape(); //mouth
+fill(0, 0, 0);
+vertex(300, 443);
+vertex(365, 426);
+vertex(360, 429);
+endShape(CLOSE);
+beginShape(); //hair front
+strokeWeight(4);
+stroke(122, 82, 50);
+fill(182, 124, 79);
+vertex(250, -30);
+vertex(200, 30);
+vertex(440, 320);
+vertex(465, 290);
+vertex(480, 240);
+vertex(540, 220);
+vertex(580, 280);
+vertex(520, 370);
+vertex(490, 360);
+vertex(470, 540);
+vertex(495, 450);
+vertex(486, 530);
+vertex(520, 500);
+vertex(500, 530);
+vertex(600, 460);
+vertex(600, 0);
+endShape(CLOSE);
+}
+</p>
+
+</pre>
+</body>
+</html>

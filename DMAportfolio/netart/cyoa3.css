@@ -1,0 +1,45 @@
+body {
+  background-color:#32445d;
+  background-image: url("trees.gif");
+  background-repeat: repeat;
+}
+
+p {
+  font-family: Tahoma;
+  color: white;
+  position: static;
+  text-align: center;
+  font-style: italic;
+  margin-left: 20px;
+}
+
+h1 {
+  font-family: Tahoma;
+  color: white;
+  position: static;
+  text-align: center;
+  margin-left: 20px;
+}
+
+h2 {
+  font-family: Tahoma;
+  color: white;
+  position: static;
+  font-style: italic;
+  text-align: center;
+  margin-left: 20px;
+}
+
+h3 {
+  font-family: Tahoma;
+  font-size: 30px;
+  color: white;
+  text-align: center;
+  position: static;
+  margin-left: 20px;
+}
+
+a:link { text-decoration: none;   color: white;  }
+a:visited { text-decoration: none;   color: white;  }
+a:hover { text-decoration: none;   color: white;  }
+a:active { text-decoration: none;   color: white;  }
