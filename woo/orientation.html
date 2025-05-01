@@ -32,10 +32,19 @@
             cursor: pointer;
             margin: 20px;
         }
+        .status {
+            color: #666;
+            margin: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <h1>Device Orientation Demo</h1>
+    
+    <div id="status" class="status">Checking device orientation support...</div>
     
     <button id="requestPermission" class="permission-button">Enable Device Orientation</button>
 
@@ -59,6 +68,12 @@
         const betaElement = document.getElementById('beta');
         const gammaElement = document.getElementById('gamma');
         const permissionButton = document.getElementById('requestPermission');
+        const statusElement = document.getElementById('status');
+
+        function updateStatus(message) {
+            statusElement.textContent = message;
+            console.log(message);
+        }
 
         function handleOrientation(event) {
             // Round values to 2 decimal places
@@ -72,23 +87,41 @@
             gammaElement.textContent = `${gamma}°`;
         }
 
+        // Check if device orientation is supported
+        if (window.DeviceOrientationEvent) {
+            updateStatus('Device orientation is supported!');
+        } else {
+            updateStatus('Device orientation is NOT supported');
+            permissionButton.style.display = 'none';
+        }
+
         permissionButton.addEventListener('click', async () => {
             try {
-                // Request permission for iOS 13+ devices
+                // Check if we're on iOS 13+ (where permission is required)
                 if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    updateStatus('Requesting iOS permission...');
+                    
                     const permission = await DeviceOrientationEvent.requestPermission();
+                    updateStatus(`iOS permission response: ${permission}`);
+                    
                     if (permission === 'granted') {
                         window.addEventListener('deviceorientation', handleOrientation);
                         permissionButton.style.display = 'none';
+                        updateStatus('Permission granted! Move your device around.');
+                    } else {
+                        updateStatus('Permission denied by user');
                     }
                 } else {
                     // For non-iOS devices or older versions
+                    updateStatus('No permission required, adding event listener...');
                     window.addEventListener('deviceorientation', handleOrientation);
                     permissionButton.style.display = 'none';
+                    updateStatus('Move your device around to see the values change');
                 }
             } catch (error) {
-                console.error('Error requesting device orientation permission:', error);
-                alert('Error requesting device orientation permission. This feature may not be supported on your device.');
+                console.error('Error:', error);
+                updateStatus(`Error: ${error.message}`);
+                alert('Error requesting device orientation permission. Make sure you are using HTTPS!');
             }
         });
     </script>
