@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Orientation Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .orientation-data {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+        .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .permission-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Device Orientation Demo</h1>
+    
+    <button id="requestPermission" class="permission-button">Enable Device Orientation</button>
+
+    <div class="orientation-data">
+        <h2>Alpha (Z-axis rotation)</h2>
+        <div id="alpha" class="value">0°</div>
+    </div>
+
+    <div class="orientation-data">
+        <h2>Beta (Front/back tilt)</h2>
+        <div id="beta" class="value">0°</div>
+    </div>
+
+    <div class="orientation-data">
+        <h2>Gamma (Left/right tilt)</h2>
+        <div id="gamma" class="value">0°</div>
+    </div>
+
+    <script>
+        const alphaElement = document.getElementById('alpha');
+        const betaElement = document.getElementById('beta');
+        const gammaElement = document.getElementById('gamma');
+        const permissionButton = document.getElementById('requestPermission');
+
+        function handleOrientation(event) {
+            // Round values to 2 decimal places
+            const alpha = event.alpha ? event.alpha.toFixed(2) : 0;
+            const beta = event.beta ? event.beta.toFixed(2) : 0;
+            const gamma = event.gamma ? event.gamma.toFixed(2) : 0;
+
+            // Update the display
+            alphaElement.textContent = `${alpha}°`;
+            betaElement.textContent = `${beta}°`;
+            gammaElement.textContent = `${gamma}°`;
+        }
+
+        permissionButton.addEventListener('click', async () => {
+            try {
+                // Request permission for iOS 13+ devices
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    const permission = await DeviceOrientationEvent.requestPermission();
+                    if (permission === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                        permissionButton.style.display = 'none';
+                    }
+                } else {
+                    // For non-iOS devices or older versions
+                    window.addEventListener('deviceorientation', handleOrientation);
+                    permissionButton.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error requesting device orientation permission:', error);
+                alert('Error requesting device orientation permission. This feature may not be supported on your device.');
+            }
+        });
+    </script>
+</body>
+</html>
