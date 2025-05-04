@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket + Device Orientation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #status, #orientationStatus {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #messageLog {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .orientation-data {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .permission-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket + Device Orientation</h1>
+    
+    <div id="status" class="disconnected">Disconnected</div>
+    <div>
+        <button id="connectBtn">Connect</button>
+        <button id="disconnectBtn">Disconnect</button>
+    </div>
+    <div>
+        <h3>Send Message</h3>
+        <input type="text" id="messageInput" placeholder="Enter message">
+        <button id="sendBtn">Send</button>
+    </div>
+    <div>
+        <h3>Message Log</h3>
+        <div id="messageLog"></div>
+    </div>
+
+    <hr>
+
+    <div id="orientationStatus" class="status">Checking device orientation support...</div>
+    <button id="requestPermission" class="permission-button">Enable Device Orientation</button>
+    <div class="orientation-data">
+        <h2>Alpha (Z-axis rotation)</h2>
+        <div id="alpha" class="value">0°</div>
+    </div>
+    <div class="orientation-data">
+        <h2>Beta (Front/back tilt)</h2>
+        <div id="beta" class="value">0°</div>
+    </div>
+    <div class="orientation-data">
+        <h2>Gamma (Left/right tilt)</h2>
+        <div id="gamma" class="value">0°</div>
+    </div>
+
+    <script>
+        // --- WebSocket Section ---
+        let ws;
+        const statusDiv = document.getElementById('status');
+        const messageLog = document.getElementById('messageLog');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        const messageInput = document.getElementById('messageInput');
+
+        function connect() {
+            ws = new WebSocket('wss://cnmat.io?channels=max');
+            ws.onopen = () => {
+                statusDiv.textContent = 'Connected';
+                statusDiv.className = 'connected';
+                logMessage('Connected to server');
+            };
+            ws.onclose = () => {
+                statusDiv.textContent = 'Disconnected';
+                statusDiv.className = 'disconnected';
+                logMessage('Disconnected from server');
+            };
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    logMessage('Received: ' + JSON.stringify(data, null, 2));
+                } catch (e) {
+                    logMessage('Received: ' + event.data);
+                }
+            };
+            ws.onerror = (error) => {
+                logMessage('Error: ' + error.message);
+            };
+        }
+
+        function disconnect() {
+            if (ws) ws.close();
+        }
+
+        function sendMessage() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const message = messageInput.value;
+                if (message) {
+                    const data = { type: 'message', data: message };
+                    ws.send(JSON.stringify(data));
+                    logMessage('Sent: ' + message);
+                    messageInput.value = '';
+                }
+            } else {
+                logMessage('Cannot send message: Not connected');
+            }
+        }
+
+        function logMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            messageLog.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            messageLog.scrollTop = messageLog.scrollHeight;
+        }
+
+        connectBtn.addEventListener('click', connect);
+        disconnectBtn.addEventListener('click', disconnect);
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // --- Device Orientation Section ---
+        const alphaElement = document.getElementById('alpha');
+        const betaElement = document.getElementById('beta');
+        const gammaElement = document.getElementById('gamma');
+        const permissionButton = document.getElementById('requestPermission');
+        const orientationStatus = document.getElementById('orientationStatus');
+
+        function updateOrientationStatus(message) {
+            orientationStatus.textContent = message;
+            console.log(message);
+        }
+
+        function handleOrientation(event) {
+            const alpha = event.alpha ? event.alpha.toFixed(2) : 0;
+            const beta = event.beta ? event.beta.toFixed(2) : 0;
+            const gamma = event.gamma ? event.gamma.toFixed(2) : 0;
+
+            alphaElement.textContent = `${alpha}°`;
+            betaElement.textContent = `${beta}°`;
+            gammaElement.textContent = `${gamma}°`;
+
+            // Send orientation data over WebSocket
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const orientationData = {
+                    type: 'orientation',
+                    alpha: Number(alpha),
+                    beta: Number(beta),
+                    gamma: Number(gamma)
+                };
+                ws.send(JSON.stringify(orientationData));
+                logMessage('Sent orientation: ' + JSON.stringify(orientationData));
+            }
+        }
+
+        // Check if device orientation is supported
+        if (window.DeviceOrientationEvent) {
+            updateOrientationStatus('Device orientation is supported!');
+        } else {
+            updateOrientationStatus('Device orientation is NOT supported');
+            permissionButton.style.display = 'none';
+        }
+
+        permissionButton.addEventListener('click', async () => {
+            try {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    updateOrientationStatus('Requesting iOS permission...');
+                    const permission = await DeviceOrientationEvent.requestPermission();
+                    updateOrientationStatus(`iOS permission response: ${permission}`);
+                    if (permission === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                        permissionButton.style.display = 'none';
+                        updateOrientationStatus('Permission granted! Move your device around.');
+                    } else {
+                        updateOrientationStatus('Permission denied by user');
+                    }
+                } else {
+                    updateOrientationStatus('No permission required, adding event listener...');
+                    window.addEventListener('deviceorientation', handleOrientation);
+                    permissionButton.style.display = 'none';
+                    updateOrientationStatus('Move your device around to see the values change');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                updateOrientationStatus(`Error: ${error.message}`);
+                alert('Error requesting device orientation permission. Make sure you are using HTTPS!');
+            }
+        });
+    </script>
+</body>
+</html>
