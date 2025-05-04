@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic CNMAT WebSocket Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #messageLog {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>CNMAT WebSocket Example</h1>
+    
+    <div id="status" class="disconnected">Disconnected</div>
+    
+    <div>
+        <button id="connectBtn">Connect</button>
+        <button id="disconnectBtn">Disconnect</button>
+    </div>
+
+    <div>
+        <h3>Send Message</h3>
+        <input type="text" id="messageInput" placeholder="Enter message">
+        <button id="sendBtn">Send</button>
+    </div>
+
+    <div>
+        <h3>Message Log</h3>
+        <div id="messageLog"></div>
+    </div>
+
+    <script>
+        let ws;
+        const statusDiv = document.getElementById('status');
+        const messageLog = document.getElementById('messageLog');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        const messageInput = document.getElementById('messageInput');
+
+        function connect() {
+            // Connect to CNMAT WebSocket server
+            ws = new WebSocket('wss://cnmat.io?channels=max');
+
+            ws.onopen = () => {
+                statusDiv.textContent = 'Connected';
+                statusDiv.className = 'connected';
+                logMessage('Connected to server');
+            };
+
+            ws.onclose = () => {
+                statusDiv.textContent = 'Disconnected';
+                statusDiv.className = 'disconnected';
+                logMessage('Disconnected from server');
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    logMessage('Received: ' + JSON.stringify(data, null, 2));
+                } catch (e) {
+                    logMessage('Received: ' + event.data);
+                }
+            };
+
+            ws.onerror = (error) => {
+                logMessage('Error: ' + error.message);
+            };
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+            }
+        }
+
+        function sendMessage() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const message = messageInput.value;
+                if (message) {
+                    // Example of sending a simple message
+                    const data = {
+                        type: 'message',
+                        data: message
+                    };
+                    ws.send(JSON.stringify(data));
+                    logMessage('Sent: ' + message);
+                    messageInput.value = '';
+                }
+            } else {
+                logMessage('Cannot send message: Not connected');
+            }
+        }
+
+        function logMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            messageLog.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            messageLog.scrollTop = messageLog.scrollHeight;
+        }
+
+        // Event listeners
+        connectBtn.addEventListener('click', connect);
+        disconnectBtn.addEventListener('click', disconnect);
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html> 
