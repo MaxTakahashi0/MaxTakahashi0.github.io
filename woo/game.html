@@ -149,9 +149,9 @@
         <h1>CHAOS DETECTOR v2.0</h1>
         
         <div id="orientationStatus" class="status">[SYSTEM] Chaos detection module status: PENDING</div>
-        <div id="connectionStatus" class="status">[SYSTEM] Max/MSP neural link: DISCONNECTED</div>
+        <div id="connectionStatus" class="status">[SYSTEM] Anomaly link: DISCONNECTED</div>
         <button id="requestPermission" class="permission-button">INITIALIZE CHAOS TRACKING</button>
-        <button id="connectBtn" class="permission-button">ESTABLISH NEURAL LINK</button>
+        <button id="connectBtn" class="permission-button">ESTABLISH ATMOSPHERIC ANOMALY LINK</button>
 
         <div id="debugInfo" class="debug-info">
             <p>[DEBUG] Target Chaos Source Coordinates:</p>
@@ -279,13 +279,14 @@
         }
 
         function updateBackground(accuracy) {
-            // Update background color based on accuracy
+            // Update background color based on accuracy with more dramatic effect
             const greenIntensity = Math.floor(accuracy * 2.55); // Convert percentage to 0-255
-            document.body.style.backgroundColor = `rgb(0, ${greenIntensity}, 0)`;
+            const redIntensity = Math.floor((100 - accuracy) * 2.55); // Add red for contrast
+            document.body.style.backgroundColor = `rgb(${redIntensity}, ${greenIntensity}, 0)`;
             
             // Enable hunt button when close enough
             huntButton.disabled = accuracy < 90;
-            sendGameData(accuracy); // Send real-time accuracy
+            sendGameData(accuracy);
         }
 
         function handleOrientation(event) {
@@ -307,9 +308,9 @@
 
         function checkWin() {
             const accuracy = calculateAccuracy(
-                parseInt(document.getElementById('alpha')?.textContent || 0),
-                parseInt(document.getElementById('beta')?.textContent || 0),
-                parseInt(document.getElementById('gamma')?.textContent || 0)
+                parseInt(document.getElementById('currentAlpha')?.textContent || 0),
+                parseInt(document.getElementById('currentBeta')?.textContent || 0),
+                parseInt(document.getElementById('currentGamma')?.textContent || 0)
             );
             
             if (accuracy >= 90) {
