@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAOS DETECTOR v2.0</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #00ff00;
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.5s ease;
+        }
+
+        .game-container {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #00ff00;
+            background-color: #001100;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #00ff00;
+            background-color: #000000;
+            font-size: 18px;
+        }
+
+        .hunt-button {
+            padding: 30px 60px;
+            font-size: 32px;
+            background-color: #001100;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            cursor: pointer;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .hunt-button:hover {
+            background-color: #00ff00;
+            color: #000000;
+            text-shadow: none;
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        .hunt-button:disabled {
+            background-color: #001100;
+            color: #003300;
+            border-color: #003300;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .score {
+            font-size: 32px;
+            margin: 20px 0;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .permission-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #001100;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            cursor: pointer;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        .permission-button:hover {
+            background-color: #00ff00;
+            color: #000000;
+            text-shadow: none;
+            box-shadow: 0 0 15px #00ff00;
+        }
+
+        .instructions {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #00ff00;
+            background-color: #000000;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .level {
+            font-size: 24px;
+            margin: 20px 0;
+            text-shadow: 0 0 5px #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>CHAOS DETECTOR v2.0</h1>
+        
+        <div id="orientationStatus" class="status">[SYSTEM] Chaos detection module status: PENDING</div>
+        <div id="connectionStatus" class="status">[SYSTEM] Max/MSP neural link: DISCONNECTED</div>
+        <button id="requestPermission" class="permission-button">INITIALIZE CHAOS TRACKING</button>
+        <button id="connectBtn" class="permission-button">ESTABLISH NEURAL LINK</button>
+
+        <div class="instructions">
+            <p>[INIT] Chaos detection protocol active.</p>
+            <p>[ALERT] Move device to locate chaotic patterns.</p>
+            <p>[WARNING] Screen will indicate proximity to chaos source.</p>
+            <p>[SYSTEM] Confirm position when chaos levels peak.</p>
+        </div>
+
+        <div class="level">Chaos Level: <span id="level">1</span></div>
+        <div class="score">Chaos Points: <span id="score">0</span></div>
+        
+        <button id="huntButton" class="hunt-button" disabled>CONFIRM CHAOS SOURCE</button>
+    </div>
+
+    <script>
+        let targetAlpha, targetBeta, targetGamma;
+        let score = 0;
+        let level = 1;
+        const baseTolerance = 15; // Base tolerance for level 1
+        const huntButton = document.getElementById('huntButton');
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const connectBtn = document.getElementById('connectBtn');
+        let ws;
+
+        // WebSocket connection setup
+        function connectToMax() {
+            ws = new WebSocket('wss://cnmat.io?channels=max');
+            
+            ws.onopen = () => {
+                connectionStatus.textContent = '[SYSTEM] Atmospheric anomaly link established. Chaos data streaming.';
+                connectionStatus.style.borderColor = '#00ff00';
+                connectBtn.textContent = 'TERMINATE ANOMALY LINK';
+                sendGameData();
+            };
+
+            ws.onclose = () => {
+                connectionStatus.textContent = '[SYSTEM] Anomaly link terminated. Chaos data stream interrupted.';
+                connectionStatus.style.borderColor = '#ff0000';
+                connectBtn.textContent = 'ESTABLISH ANOMALY LINK';
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                connectionStatus.textContent = '[ERROR] Anomaly link compromised. Chaos data stream corrupted.';
+                connectionStatus.style.borderColor = '#ff0000';
+            };
+        }
+
+        function disconnectFromMax() {
+            if (ws) {
+                ws.close();
+            }
+        }
+
+        function sendGameData(accuracy = 0) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const data = {
+                    type: 'chaosData',
+                    chaosPoints: score,
+                    chaosLevel: level,
+                    chaosIntensity: accuracy,
+                    chaosSource: {
+                        alpha: targetAlpha,
+                        beta: targetBeta,
+                        gamma: targetGamma
+                    }
+                };
+                ws.send(JSON.stringify(data));
+            }
+        }
+
+        function generateTargetValues() {
+            targetAlpha = Math.floor(Math.random() * 360);
+            targetBeta = Math.floor(Math.random() * 180) - 90;
+            targetGamma = Math.floor(Math.random() * 180) - 90;
+            sendGameData(); // Send new target position
+        }
+
+        function calculateAccuracy(alpha, beta, gamma) {
+            const alphaDiff = Math.abs(alpha - targetAlpha);
+            const betaDiff = Math.abs(beta - targetBeta);
+            const gammaDiff = Math.abs(gamma - targetGamma);
+            
+            // Adjust tolerance based on level
+            const currentTolerance = baseTolerance - (level - 1);
+            const maxDiff = Math.max(alphaDiff, betaDiff, gammaDiff);
+            const accuracy = Math.max(0, 100 - (maxDiff * 100 / currentTolerance));
+            
+            return accuracy;
+        }
+
+        function updateBackground(accuracy) {
+            // Update background color based on accuracy
+            const greenIntensity = Math.floor(accuracy * 2.55); // Convert percentage to 0-255
+            document.body.style.backgroundColor = `rgb(0, ${greenIntensity}, 0)`;
+            
+            // Enable hunt button when close enough
+            huntButton.disabled = accuracy < 90;
+            sendGameData(accuracy); // Send real-time accuracy
+        }
+
+        function handleOrientation(event) {
+            const alpha = event.alpha ? Math.round(event.alpha) : 0;
+            const beta = event.beta ? Math.round(event.beta) : 0;
+            const gamma = event.gamma ? Math.round(event.gamma) : 0;
+
+            const accuracy = calculateAccuracy(alpha, beta, gamma);
+            updateBackground(accuracy);
+        }
+
+        function checkWin() {
+            const accuracy = calculateAccuracy(
+                parseInt(document.getElementById('alpha')?.textContent || 0),
+                parseInt(document.getElementById('beta')?.textContent || 0),
+                parseInt(document.getElementById('gamma')?.textContent || 0)
+            );
+            
+            if (accuracy >= 90) {
+                score += 100 * level;
+                scoreElement.textContent = score;
+                
+                if (score % 300 === 0) {
+                    level++;
+                    levelElement.textContent = level;
+                }
+                
+                generateTargetValues();
+                sendGameData(accuracy);
+                alert(`[SUCCESS] Chaos source confirmed!\n[SYSTEM] +${100 * level} chaos points\n[ALERT] Chaos level ${level} detected`);
+            } else {
+                alert('[WARNING] Chaos levels insufficient. Continue scanning.');
+            }
+        }
+
+        // Initialize game
+        generateTargetValues();
+        huntButton.addEventListener('click', checkWin);
+
+        // Device orientation setup
+        const permissionButton = document.getElementById('requestPermission');
+        const orientationStatus = document.getElementById('orientationStatus');
+
+        function updateOrientationStatus(message) {
+            orientationStatus.textContent = '[SYSTEM] ' + message;
+        }
+
+        if (window.DeviceOrientationEvent) {
+            updateOrientationStatus('Chaos detection module: READY');
+        } else {
+            updateOrientationStatus('Chaos detection module: NOT SUPPORTED');
+            permissionButton.style.display = 'none';
+        }
+
+        permissionButton.addEventListener('click', async () => {
+            try {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    updateOrientationStatus('Requesting chaos detection authorization...');
+                    const permission = await DeviceOrientationEvent.requestPermission();
+                    updateOrientationStatus(`Authorization response: ${permission}`);
+                    if (permission === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                        permissionButton.style.display = 'none';
+                        updateOrientationStatus('Chaos detection: ACTIVE');
+                    } else {
+                        updateOrientationStatus('Chaos detection: ACCESS DENIED');
+                    }
+                } else {
+                    updateOrientationStatus('Chaos detection: INITIALIZING');
+                    window.addEventListener('deviceorientation', handleOrientation);
+                    permissionButton.style.display = 'none';
+                    updateOrientationStatus('Chaos detection: ACTIVE');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                updateOrientationStatus(`Error: ${error.message}`);
+                alert('[WARNING] Chaos detection initialization failed. Ensure secure connection (HTTPS) is active.');
+            }
+        });
+
+        // Add WebSocket connection button handler
+        connectBtn.addEventListener('click', () => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                disconnectFromMax();
+            } else {
+                connectToMax();
+            }
+        });
+    </script>
+</body>
+</html> 
