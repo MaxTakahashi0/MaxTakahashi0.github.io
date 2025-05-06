@@ -116,6 +116,42 @@
             margin: 20px 0;
             text-shadow: 0 0 5px #00ff00;
         }
+
+        .debug-info {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #00ff00;
+            background-color: #000000;
+            font-size: 16px;
+            display: none;
+        }
+
+        .debug-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #001100;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            cursor: pointer;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        .debug-button:hover {
+            background-color: #00ff00;
+            color: #000000;
+            text-shadow: none;
+            box-shadow: 0 0 15px #00ff00;
+        }
+
+        .debug-button.active {
+            background-color: #00ff00;
+            color: #000000;
+            text-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -126,6 +162,14 @@
         <div id="connectionStatus" class="status">[SYSTEM] Max/MSP neural link: DISCONNECTED</div>
         <button id="requestPermission" class="permission-button">INITIALIZE CHAOS TRACKING</button>
         <button id="connectBtn" class="permission-button">ESTABLISH NEURAL LINK</button>
+        <button id="debugBtn" class="debug-button">ENABLE DEBUG MODE</button>
+
+        <div id="debugInfo" class="debug-info">
+            <p>[DEBUG] Target Chaos Source Coordinates:</p>
+            <p>Alpha: <span id="targetAlpha">--</span>°</p>
+            <p>Beta: <span id="targetBeta">--</span>°</p>
+            <p>Gamma: <span id="targetGamma">--</span>°</p>
+        </div>
 
         <div class="instructions">
             <p>[INIT] Chaos detection protocol active.</p>
@@ -150,6 +194,11 @@
         const levelElement = document.getElementById('level');
         const connectionStatus = document.getElementById('connectionStatus');
         const connectBtn = document.getElementById('connectBtn');
+        const debugBtn = document.getElementById('debugBtn');
+        const debugInfo = document.getElementById('debugInfo');
+        const targetAlphaDisplay = document.getElementById('targetAlpha');
+        const targetBetaDisplay = document.getElementById('targetBeta');
+        const targetGammaDisplay = document.getElementById('targetGamma');
         let ws;
 
         // WebSocket connection setup
@@ -203,7 +252,16 @@
             targetAlpha = Math.floor(Math.random() * 360);
             targetBeta = Math.floor(Math.random() * 180) - 90;
             targetGamma = Math.floor(Math.random() * 180) - 90;
-            sendGameData(); // Send new target position
+            updateTargetDisplay();
+            sendGameData();
+        }
+
+        function updateTargetDisplay() {
+            if (debugInfo.style.display === 'block') {
+                targetAlphaDisplay.textContent = targetAlpha;
+                targetBetaDisplay.textContent = targetBeta;
+                targetGammaDisplay.textContent = targetGamma;
+            }
         }
 
         function calculateAccuracy(alpha, beta, gamma) {
@@ -313,6 +371,16 @@
                 disconnectFromMax();
             } else {
                 connectToMax();
+            }
+        });
+
+        debugBtn.addEventListener('click', () => {
+            const isDebugMode = debugInfo.style.display === 'block';
+            debugInfo.style.display = isDebugMode ? 'none' : 'block';
+            debugBtn.textContent = isDebugMode ? 'ENABLE DEBUG MODE' : 'DISABLE DEBUG MODE';
+            debugBtn.classList.toggle('active');
+            if (!isDebugMode) {
+                updateTargetDisplay();
             }
         });
     </script>
