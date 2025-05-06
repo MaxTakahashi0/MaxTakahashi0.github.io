@@ -127,30 +127,20 @@
         }
 
         .debug-button {
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 8px 16px;
+            font-size: 12px;
             background-color: #001100;
             color: #00ff00;
-            border: 2px solid #00ff00;
+            border: 1px solid #00ff00;
             cursor: pointer;
-            margin: 20px 0;
             font-family: 'Courier New', monospace;
             transition: all 0.3s ease;
             text-shadow: 0 0 5px #00ff00;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
-        }
-
-        .debug-button:hover {
-            background-color: #00ff00;
-            color: #000000;
-            text-shadow: none;
-            box-shadow: 0 0 15px #00ff00;
-        }
-
-        .debug-button.active {
-            background-color: #00ff00;
-            color: #000000;
-            text-shadow: none;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1001;
         }
     </style>
 </head>
@@ -162,7 +152,6 @@
         <div id="connectionStatus" class="status">[SYSTEM] Max/MSP neural link: DISCONNECTED</div>
         <button id="requestPermission" class="permission-button">INITIALIZE CHAOS TRACKING</button>
         <button id="connectBtn" class="permission-button">ESTABLISH NEURAL LINK</button>
-        <button id="debugBtn" class="debug-button">ENABLE DEBUG MODE</button>
 
         <div id="debugInfo" class="debug-info">
             <p>[DEBUG] Target Chaos Source Coordinates:</p>
@@ -189,6 +178,8 @@
         
         <button id="huntButton" class="hunt-button" disabled>CONFIRM CHAOS SOURCE</button>
     </div>
+
+    <button id="debugBtn" class="debug-button">DEBUG</button>
 
     <script>
         let targetAlpha, targetBeta, targetGamma;
@@ -395,8 +386,6 @@
         debugBtn.addEventListener('click', () => {
             const isDebugMode = debugInfo.style.display === 'block';
             debugInfo.style.display = isDebugMode ? 'none' : 'block';
-            debugBtn.textContent = isDebugMode ? 'ENABLE DEBUG MODE' : 'DISABLE DEBUG MODE';
-            debugBtn.classList.toggle('active');
             if (!isDebugMode) {
                 updateTargetDisplay();
             }
