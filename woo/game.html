@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CHAOS DETECTOR v2.0</title>
     <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Courier New', monospace;
             margin: 0;
@@ -12,52 +17,56 @@
             background-color: #000000;
             color: #00ff00;
             line-height: 1.6;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             transition: background-color 0.5s ease;
+            touch-action: manipulation;
         }
 
         .game-container {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             border: 2px solid #00ff00;
             background-color: #001100;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-            max-width: 600px;
-            width: 90%;
+            width: 95%;
+            max-width: 500px;
+            margin: 10px;
         }
 
         h1 {
             color: #00ff00;
             text-shadow: 0 0 10px #00ff00;
-            margin-bottom: 30px;
+            margin: 10px 0;
+            font-size: 24px;
         }
 
         .status {
-            margin: 20px 0;
-            padding: 15px;
+            margin: 10px 0;
+            padding: 10px;
             border: 2px solid #00ff00;
             background-color: #000000;
-            font-size: 18px;
+            font-size: 14px;
         }
 
         .hunt-button {
-            padding: 30px 60px;
-            font-size: 32px;
+            padding: 20px 40px;
+            font-size: 24px;
             background-color: #001100;
             color: #00ff00;
             border: 2px solid #00ff00;
             cursor: pointer;
-            margin: 30px 0;
+            margin: 20px 0;
             font-family: 'Courier New', monospace;
             transition: all 0.3s ease;
             text-shadow: 0 0 5px #00ff00;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
-            width: 80%;
-            max-width: 400px;
+            width: 90%;
+            max-width: 300px;
+            touch-action: manipulation;
         }
 
         .hunt-button:hover {
@@ -76,23 +85,26 @@
         }
 
         .score {
-            font-size: 32px;
-            margin: 20px 0;
+            font-size: 24px;
+            margin: 15px 0;
             text-shadow: 0 0 5px #00ff00;
         }
 
         .permission-button {
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 12px 24px;
+            font-size: 16px;
             background-color: #001100;
             color: #00ff00;
             border: 2px solid #00ff00;
             cursor: pointer;
-            margin: 20px 0;
+            margin: 10px 0;
             font-family: 'Courier New', monospace;
             transition: all 0.3s ease;
             text-shadow: 0 0 5px #00ff00;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            width: 90%;
+            max-width: 300px;
+            touch-action: manipulation;
         }
 
         .permission-button:hover {
@@ -103,27 +115,32 @@
         }
 
         .instructions {
-            margin: 20px 0;
-            padding: 20px;
+            margin: 15px 0;
+            padding: 15px;
             border: 2px solid #00ff00;
             background-color: #000000;
-            font-size: 16px;
-            line-height: 1.8;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         .level {
-            font-size: 24px;
-            margin: 20px 0;
+            font-size: 20px;
+            margin: 15px 0;
             text-shadow: 0 0 5px #00ff00;
         }
 
         .debug-info {
-            margin: 20px 0;
-            padding: 15px;
-            border: 2px solid #00ff00;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #00ff00;
             background-color: #000000;
-            font-size: 16px;
+            font-size: 12px;
             display: none;
+            width: 100%;
+        }
+
+        .debug-info p {
+            margin: 5px 0;
         }
 
         .debug-button {
@@ -141,6 +158,52 @@
             bottom: 10px;
             right: 10px;
             z-index: 1001;
+            touch-action: manipulation;
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 10px;
+                margin: 5px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .status {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .hunt-button {
+                padding: 15px 30px;
+                font-size: 20px;
+            }
+
+            .permission-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .instructions {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .level {
+                font-size: 18px;
+            }
+
+            .score {
+                font-size: 20px;
+            }
+        }
+
+        /* Prevent text selection */
+        .hunt-button, .permission-button, .debug-button {
+            user-select: none;
+            -webkit-user-select: none;
         }
     </style>
 </head>
