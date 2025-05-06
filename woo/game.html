@@ -169,6 +169,12 @@
             <p>Alpha: <span id="targetAlpha">--</span>°</p>
             <p>Beta: <span id="targetBeta">--</span>°</p>
             <p>Gamma: <span id="targetGamma">--</span>°</p>
+            <hr style="border: 1px solid #00ff00; margin: 15px 0;">
+            <p>[DEBUG] Current Device Position:</p>
+            <p>Alpha: <span id="currentAlpha">--</span>°</p>
+            <p>Beta: <span id="currentBeta">--</span>°</p>
+            <p>Gamma: <span id="currentGamma">--</span>°</p>
+            <p>Accuracy: <span id="currentAccuracy">--</span>%</p>
         </div>
 
         <div class="instructions">
@@ -199,6 +205,10 @@
         const targetAlphaDisplay = document.getElementById('targetAlpha');
         const targetBetaDisplay = document.getElementById('targetBeta');
         const targetGammaDisplay = document.getElementById('targetGamma');
+        const currentAlphaDisplay = document.getElementById('currentAlpha');
+        const currentBetaDisplay = document.getElementById('currentBeta');
+        const currentGammaDisplay = document.getElementById('currentGamma');
+        const currentAccuracyDisplay = document.getElementById('currentAccuracy');
         let ws;
 
         // WebSocket connection setup
@@ -294,6 +304,14 @@
 
             const accuracy = calculateAccuracy(alpha, beta, gamma);
             updateBackground(accuracy);
+            
+            // Update current position display if debug mode is active
+            if (debugInfo.style.display === 'block') {
+                currentAlphaDisplay.textContent = alpha;
+                currentBetaDisplay.textContent = beta;
+                currentGammaDisplay.textContent = gamma;
+                currentAccuracyDisplay.textContent = Math.round(accuracy);
+            }
         }
 
         function checkWin() {
