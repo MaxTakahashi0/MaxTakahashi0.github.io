@@ -231,6 +231,45 @@
     </style>
 
     <script>
+        // Add this at the start of your script section
+        // Function to hide URL bar on mobile
+        function hideUrlBar() {
+            // Request fullscreen
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+            
+            // Force scroll to top
+            window.scrollTo(0, 1);
+            
+            // Additional scroll after a short delay
+            setTimeout(() => {
+                window.scrollTo(0, 1);
+            }, 100);
+        }
+
+        // Hide URL bar on multiple events
+        window.addEventListener('load', hideUrlBar);
+        window.addEventListener('orientationchange', hideUrlBar);
+        window.addEventListener('resize', hideUrlBar);
+        window.addEventListener('scroll', hideUrlBar);
+        
+        // Hide URL bar on touch events
+        document.addEventListener('touchstart', hideUrlBar, {passive: true});
+        document.addEventListener('touchmove', hideUrlBar, {passive: true});
+        document.addEventListener('touchend', hideUrlBar, {passive: true});
+
+        // Additional attempt after a short delay
+        setTimeout(hideUrlBar, 100);
+        setTimeout(hideUrlBar, 500);
+        setTimeout(hideUrlBar, 1000);
+
         let targetAlpha, targetBeta, targetGamma;
         let score = 0;
         let totalIncome = 0;
@@ -238,6 +277,7 @@
         const huntButton = document.getElementById('huntButton');
         const scoreElement = document.getElementById('score');
         const totalIncomeElement = document.getElementById('totalIncome');
+        const levelElement = document.getElementById('level');
         const connectionStatus = document.getElementById('connectionStatus');
         const connectBtn = document.getElementById('connectBtn');
         const debugBtn = document.getElementById('debugBtn');
@@ -387,14 +427,13 @@
             return "D";
         }
 
-        function updateTotalIncomeDisplay() {
-            const levelDiv = document.querySelector('.level');
+        function updateIncomeDisplay() {
             if (totalIncome < 0) {
-                levelDiv.innerHTML = `Money owed to NNYAP&EOTW co.: <span id="totalIncome">$${Math.abs(totalIncome).toFixed(2)}</span>`;
+                levelElement.innerHTML = `Money owed to NNYAP&EOTW co.: <span id="totalIncome">$${Math.abs(totalIncome).toFixed(2)}</span>`;
             } else {
-                levelDiv.innerHTML = `Total Income: <span id="totalIncome">$${totalIncome.toFixed(2)}</span>`;
+                levelElement.innerHTML = `Total Income: <span id="totalIncome">$${totalIncome.toFixed(2)}</span>`;
             }
-            // Reassign the element reference after updating innerHTML
+            // Update the reference to totalIncomeElement since we recreated it
             totalIncomeElement = document.getElementById('totalIncome');
         }
 
@@ -425,16 +464,16 @@
                 score += totalPoints;
                 totalIncome += parseFloat(monetaryValue);
                 scoreElement.textContent = score;
-                updateTotalIncomeDisplay();
+                updateIncomeDisplay();
                 
                 generateTargetValues();
                 sendGameData(accuracy);
 
                 // Special message for 100% accuracy
                 if (accuracy >= 100) {
-                    alert(`[CRITICAL SUCCESS] Perfect chaos alignment!\n[SYSTEM] +${totalPoints} chaos points (${accuracyBonus}% accuracy bonus)\n[ALERT] Chaos level achieved\n[RANK] S-Class Detection\n[REWARD] $${monetaryValue} chaos bounty secured\n\nCongratulations, citizen! Thank you for assisting the New New York Anomaly Prevention and End of the World corporation. You have gained one point on your social status record.`);
+                    alert(`[CRITICAL SUCCESS] Perfect chaos alignment!\n[SYSTEM] +${totalPoints} chaos points (${accuracyBonus}% accuracy bonus)\n[RANK] S-Class Detection\n[REWARD] $${monetaryValue} chaos bounty secured\n\nCongratulations, citizen! Thank you for assisting the New New York Anomaly Prevention and End of the World corporation. You have gained one point on your social status record.`);
                 } else {
-                    alert(`[SUCCESS] Chaos source confirmed!\n[SYSTEM] +${totalPoints} chaos points (${accuracyBonus}% accuracy bonus)\n[ALERT] Chaos level detected\n[RANK] ${rank}-Class Detection\n[REWARD] $${monetaryValue} chaos bounty secured\n\nCongratulations, citizen! Thank you for assisting the New New York Anomaly Prevention and End of the World corporation. You have gained one point on your social status record.`);
+                    alert(`[SUCCESS] Chaos source confirmed!\n[SYSTEM] +${totalPoints} chaos points (${accuracyBonus}% accuracy bonus)\n[RANK] ${rank}-Class Detection\n[REWARD] $${monetaryValue} chaos bounty secured\n\nCongratulations, citizen! Thank you for assisting the New New York Anomaly Prevention and End of the World corporation. You have gained one point on your social status record.`);
                 }
             } else {
                 const monetaryValue = (10 * accuracy / 100).toFixed(2);
@@ -443,7 +482,7 @@
                 const deduction = ((50 - accuracy) * 0.5).toFixed(2); // Deduct $0.50 for each percentage point below 50%
                 const finalDeduction = Math.min(deduction, 5).toFixed(2); // Cap maximum deduction at $5.00
                 totalIncome -= parseFloat(finalDeduction);
-                updateTotalIncomeDisplay();
+                updateIncomeDisplay();
                 alert(`[WARNING] Chaos levels insufficient. Continue scanning.\n[RANK] ${rank}-Class Detection\n[REWARD] $${monetaryValue} chaos bounty available\n\nUnfortunately, you have failed, miserably. Social and monetary credits have been deducted.\n[PENALTY] -$${finalDeduction} deducted from your account\n\nCongratulations, citizen! Thank you for assisting the New New York Anomaly Prevention and End of the World corporation. You have gained one point on your social status record.`);
             }
         }
@@ -451,6 +490,7 @@
         // Initialize game
         generateTargetValues();
         huntButton.addEventListener('click', checkWin);
+        updateIncomeDisplay();
 
         // Device orientation setup
         const permissionButton = document.getElementById('requestPermission');
