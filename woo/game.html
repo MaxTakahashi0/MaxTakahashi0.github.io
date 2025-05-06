@@ -231,53 +231,6 @@
     </style>
 
     <script>
-        // Mobile URL management
-        function hideUrlBar() {
-            // Try to enter fullscreen
-            const docEl = document.documentElement;
-            const requestFullscreen = docEl.requestFullscreen || 
-                                    docEl.webkitRequestFullscreen || 
-                                    docEl.mozRequestFullScreen || 
-                                    docEl.msRequestFullscreen;
-            
-            if (requestFullscreen) {
-                requestFullscreen.call(docEl);
-            }
-
-            // Force scroll to top
-            window.scrollTo(0, 1);
-            
-            // Additional scroll attempts with increasing delays
-            [100, 300, 500, 1000].forEach(delay => {
-                setTimeout(() => {
-                    window.scrollTo(0, 1);
-                }, delay);
-            });
-        }
-
-        // Hide URL bar on various events
-        const events = [
-            'load',
-            'orientationchange',
-            'resize',
-            'scroll',
-            'touchstart',
-            'touchmove',
-            'touchend'
-        ];
-
-        events.forEach(event => {
-            const target = event.startsWith('touch') ? document : window;
-            target.addEventListener(event, hideUrlBar, { passive: true });
-        });
-
-        // Additional attempts after page load
-        window.addEventListener('load', () => {
-            [100, 500, 1000, 2000].forEach(delay => {
-                setTimeout(hideUrlBar, delay);
-            });
-        });
-
         let targetAlpha, targetBeta, targetGamma;
         let score = 0;
         let totalIncome = 0;
