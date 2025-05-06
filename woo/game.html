@@ -329,13 +329,13 @@
         }
 
         function calculateAccuracy(alpha, beta, gamma) {
-            const alphaDiff = Math.abs(alpha - targetAlpha);
+            // Only use beta and gamma for accuracy calculation
             const betaDiff = Math.abs(beta - targetBeta);
             const gammaDiff = Math.abs(gamma - targetGamma);
             
             // Adjust tolerance based on level
             const currentTolerance = baseTolerance - (level - 1);
-            const maxDiff = Math.max(alphaDiff, betaDiff, gammaDiff);
+            const maxDiff = Math.max(betaDiff, gammaDiff);
             const accuracy = Math.max(0, 100 - (maxDiff * 100 / currentTolerance));
             
             return accuracy;
@@ -353,9 +353,16 @@
         }
 
         function handleOrientation(event) {
-            const alpha = event.alpha ? Math.round(event.alpha) : 0;
-            const beta = event.beta ? Math.round(event.beta) : 0;
-            const gamma = event.gamma ? Math.round(event.gamma) : 0;
+            // Ensure we have valid values, defaulting to 0 if undefined
+            const alpha = event.alpha !== null ? Math.round(event.alpha) : 0;
+            const beta = event.beta !== null ? Math.round(event.beta) : 0;
+            const gamma = event.gamma !== null ? Math.round(event.gamma) : 0;
+
+            // Check if we have valid orientation data
+            if (beta === null || gamma === null) {
+                console.warn('Invalid orientation data received');
+                return;
+            }
 
             const accuracy = calculateAccuracy(alpha, beta, gamma);
             updateBackground(accuracy);
@@ -370,11 +377,17 @@
         }
 
         function checkWin() {
-            const accuracy = calculateAccuracy(
-                parseInt(document.getElementById('currentAlpha')?.textContent || 0),
-                parseInt(document.getElementById('currentBeta')?.textContent || 0),
-                parseInt(document.getElementById('currentGamma')?.textContent || 0)
-            );
+            // Get current values from display
+            const currentBeta = parseInt(document.getElementById('currentBeta')?.textContent || 0);
+            const currentGamma = parseInt(document.getElementById('currentGamma')?.textContent || 0);
+
+            // Check if we have valid values
+            if (isNaN(currentBeta) || isNaN(currentGamma)) {
+                console.warn('Invalid position values detected');
+                return;
+            }
+
+            const accuracy = calculateAccuracy(0, currentBeta, currentGamma);
             
             if (accuracy >= 90) {
                 score += 100 * level;
