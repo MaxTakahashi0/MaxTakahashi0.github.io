@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>CHAOS DETECTOR v2.0</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #00ff00;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.5s ease;
+            touch-action: manipulation;
+        }
+
+        .game-container {
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #00ff00;
+            background-color: #001100;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            width: 95%;
+            max-width: 500px;
+            margin: 10px;
+        }
+
+        h1 {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px solid #00ff00;
+            background-color: #000000;
+            font-size: 14px;
+        }
+
+        .hunt-button {
+            padding: 20px 40px;
+            font-size: 24px;
+            background-color: #001100;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            cursor: pointer;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease, box-shadow 0.5s ease;
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            width: 90%;
+            max-width: 300px;
+            touch-action: manipulation;
+        }
+
+        .hunt-button:hover {
+            background-color: #00ff00;
+            color: #000000;
+            text-shadow: none;
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        .hunt-button:disabled {
+            background-color: #001100;
+            color: #003300;
+            border-color: #003300;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .score {
+            font-size: 24px;
+            margin: 15px 0;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .permission-button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #001100;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            cursor: pointer;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            width: 90%;
+            max-width: 300px;
+            touch-action: manipulation;
+        }
+
+        .permission-button:hover {
+            background-color: #00ff00;
+            color: #000000;
+            text-shadow: none;
+            box-shadow: 0 0 15px #00ff00;
+        }
+
+        .instructions {
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px solid #00ff00;
+            background-color: #000000;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .level {
+            font-size: 20px;
+            margin: 15px 0;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .debug-info {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            background-color: #000000;
+            font-size: 12px;
+            display: none;
+            width: 100%;
+        }
+
+        .debug-info p {
+            margin: 5px 0;
+        }
+
+        .debug-button {
+            padding: 8px 16px;
+            font-size: 12px;
+            background-color: #001100;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1001;
+            touch-action: manipulation;
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 10px;
+                margin: 5px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .status {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .hunt-button {
+                padding: 15px 30px;
+                font-size: 20px;
+            }
+
+            .permission-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .instructions {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .level {
+                font-size: 18px;
+            }
+
+            .score {
+                font-size: 20px;
+            }
+        }
+
+        /* Prevent text selection */
+        .hunt-button, .permission-button, .debug-button {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        @keyframes chaosPulse {
+            0% { box-shadow: 0 0 20px #00ff00; }
+            50% { box-shadow: 0 0 40px #00ff00, 0 0 60px #00ff00; }
+            100% { box-shadow: 0 0 20px #00ff00; }
+        }
+
+        @keyframes chaosText {
+            0% { text-shadow: 0 0 10px #00ff00; }
+            50% { text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; }
+            100% { text-shadow: 0 0 10px #00ff00; }
+        }
+
+        .chaos-effect {
+            animation: chaosPulse 1s infinite;
+        }
+
+        .chaos-text {
+            animation: chaosText 1s infinite;
+        }
+    </style>
+
+    <script>
+        // Add this at the start of your script section
+        // Function to hide URL bar on mobile
+        function hideUrlBar() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            }
+            
+            // Scroll to top to hide URL bar
+            window.scrollTo(0, 1);
+        }
+
+        // Hide URL bar on load and orientation change
+        window.addEventListener('load', hideUrlBar);
+        window.addEventListener('orientationchange', hideUrlBar);
+        
+        // Hide URL bar on touch start
+        document.addEventListener('touchstart', hideUrlBar, {passive: true});
+    </script>
+</head>
+<body>
+    <div class="game-container">
+        <h1>CHAOS DETECTOR v2.0</h1>
+        
+        <div id="orientationStatus" class="status">[SYSTEM] Chaos detection module status: PENDING</div>
+        <div id="connectionStatus" class="status">[SYSTEM] Anomaly link: DISCONNECTED</div>
+        <button id="requestPermission" class="permission-button">INITIALIZE CHAOS TRACKING</button>
+        <button id="connectBtn" class="permission-button">ESTABLISH ATMOSPHERIC ANOMALY LINK</button>
+
+        <div id="debugInfo" class="debug-info">
+            <p>[DEBUG] Target Chaos Source Coordinates:</p>
+            <p>Alpha: <span id="targetAlpha">--</span>°</p>
+            <p>Beta: <span id="targetBeta">--</span>°</p>
+            <p>Gamma: <span id="targetGamma">--</span>°</p>
+            <hr style="border: 1px solid #00ff00; margin: 15px 0;">
+            <p>[DEBUG] Current Device Position:</p>
+            <p>Alpha: <span id="currentAlpha">--</span>°</p>
+            <p>Beta: <span id="currentBeta">--</span>°</p>
+            <p>Gamma: <span id="currentGamma">--</span>°</p>
+            <p>Accuracy: <span id="currentAccuracy">--</span>%</p>
+        </div>
+
+        <div class="instructions">
+            <p>[INIT] Chaos detection protocol active.</p>
+            <p>[ALERT] Move device to locate chaotic patterns.</p>
+            <p>[WARNING] Screen will indicate proximity to chaos source.</p>
+            <p>[SYSTEM] Confirm position when chaos levels peak.</p>
+        </div>
+
+        <div class="level">Chaos Level: <span id="level">1</span></div>
+        <div class="score">Chaos Points: <span id="score">0</span></div>
+        
+        <button id="huntButton" class="hunt-button" disabled>CONFIRM CHAOS SOURCE</button>
+    </div>
+
+    <button id="debugBtn" class="debug-button">DEBUG</button>
+
+    <script>
+        let targetAlpha, targetBeta, targetGamma;
+        let score = 0;
+        let level = 1;
+        const baseTolerance = 15; // Base tolerance for level 1
+        const huntButton = document.getElementById('huntButton');
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const connectBtn = document.getElementById('connectBtn');
+        const debugBtn = document.getElementById('debugBtn');
+        const debugInfo = document.getElementById('debugInfo');
+        const targetAlphaDisplay = document.getElementById('targetAlpha');
+        const targetBetaDisplay = document.getElementById('targetBeta');
+        const targetGammaDisplay = document.getElementById('targetGamma');
+        const currentAlphaDisplay = document.getElementById('currentAlpha');
+        const currentBetaDisplay = document.getElementById('currentBeta');
+        const currentGammaDisplay = document.getElementById('currentGamma');
+        const currentAccuracyDisplay = document.getElementById('currentAccuracy');
+        let ws;
+
+        // WebSocket connection setup
+        function connectToMax() {
+            ws = new WebSocket('wss://cnmat.io?channels=max');
+            
+            ws.onopen = () => {
+                connectionStatus.textContent = '[SYSTEM] Atmospheric anomaly link established. Chaos data streaming.';
+                connectionStatus.style.borderColor = '#00ff00';
+                connectBtn.textContent = 'TERMINATE ANOMALY LINK';
+                sendGameData();
+            };
+
+            ws.onclose = () => {
+                connectionStatus.textContent = '[SYSTEM] Anomaly link terminated. Chaos data stream interrupted.';
+                connectionStatus.style.borderColor = '#ff0000';
+                connectBtn.textContent = 'ESTABLISH ANOMALY LINK';
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                connectionStatus.textContent = '[ERROR] Anomaly link compromised. Chaos data stream corrupted.';
+                connectionStatus.style.borderColor = '#ff0000';
+            };
+        }
+
+        function disconnectFromMax() {
+            if (ws) {
+                ws.close();
+            }
+        }
+
+        function sendGameData(accuracy = 0) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const data = {
+                    type: 'chaosData',
+                    chaosPoints: score,
+                    chaosLevel: level,
+                    chaosIntensity: accuracy,
+                    chaosSource: {
+                        alpha: targetAlpha,
+                        beta: targetBeta,
+                        gamma: targetGamma
+                    }
+                };
+                ws.send(JSON.stringify(data));
+            }
+        }
+
+        function generateTargetValues() {
+            targetAlpha = Math.floor(Math.random() * 360);
+            targetBeta = Math.floor(Math.random() * 180) - 90;
+            targetGamma = Math.floor(Math.random() * 180) - 90;
+            updateTargetDisplay();
+            sendGameData();
+        }
+
+        function updateTargetDisplay() {
+            if (debugInfo.style.display === 'block') {
+                targetAlphaDisplay.textContent = targetAlpha;
+                targetBetaDisplay.textContent = targetBeta;
+                targetGammaDisplay.textContent = targetGamma;
+            }
+        }
+
+        function calculateAccuracy(alpha, beta, gamma) {
+            // Only use beta and gamma for accuracy calculation
+            const betaDiff = Math.abs(beta - targetBeta);
+            const gammaDiff = Math.abs(gamma - targetGamma);
+            
+            // Adjust tolerance based on level
+            const currentTolerance = baseTolerance - (level - 1);
+            const maxDiff = Math.max(betaDiff, gammaDiff);
+            const accuracy = Math.max(0, 100 - (maxDiff * 100 / currentTolerance));
+            
+            return accuracy;
+        }
+
+        function updateBackground(accuracy) {
+            // Update background color based on accuracy with more dramatic effect
+            const greenIntensity = Math.floor(accuracy * 2.55); // Convert percentage to 0-255
+            const redIntensity = Math.floor((100 - accuracy) * 2.55); // Add red for contrast
+            document.body.style.backgroundColor = `rgb(${redIntensity}, ${greenIntensity}, 0)`;
+            
+            // Enable hunt button when close enough (lowered threshold to 75%)
+            huntButton.disabled = accuracy < 75;
+
+            // Add chaos effect at 100% accuracy
+            if (accuracy >= 100) {
+                huntButton.classList.add('chaos-effect');
+                document.querySelector('h1').classList.add('chaos-text');
+            } else {
+                huntButton.classList.remove('chaos-effect');
+                document.querySelector('h1').classList.remove('chaos-text');
+            }
+
+            sendGameData(accuracy);
+        }
+
+        function handleOrientation(event) {
+            // Ensure we have valid values, defaulting to 0 if undefined
+            const alpha = event.alpha !== null ? Math.round(event.alpha) : 0;
+            const beta = event.beta !== null ? Math.round(event.beta) : 0;
+            const gamma = event.gamma !== null ? Math.round(event.gamma) : 0;
+
+            // Check if we have valid orientation data
+            if (beta === null || gamma === null) {
+                console.warn('Invalid orientation data received');
+                return;
+            }
+
+            const accuracy = calculateAccuracy(alpha, beta, gamma);
+            updateBackground(accuracy);
+            
+            // Update current position display if debug mode is active
+            if (debugInfo.style.display === 'block') {
+                currentAlphaDisplay.textContent = alpha;
+                currentBetaDisplay.textContent = beta;
+                currentGammaDisplay.textContent = gamma;
+                currentAccuracyDisplay.textContent = Math.round(accuracy);
+            }
+        }
+
+        function getRank(accuracy) {
+            const value = accuracy * 10; // Convert to cents
+            if (value >= 1000) return "S";
+            if (value >= 900) return "A+";
+            if (value >= 800) return "A";
+            if (value >= 700) return "A-";
+            if (value >= 600) return "B+";
+            if (value >= 500) return "B";
+            if (value >= 400) return "B-";
+            if (value >= 300) return "C+";
+            if (value >= 200) return "C";
+            if (value >= 100) return "C-";
+            return "D";
+        }
+
+        function checkWin() {
+            // Get current values from display
+            const currentBeta = parseInt(document.getElementById('currentBeta')?.textContent || 0);
+            const currentGamma = parseInt(document.getElementById('currentGamma')?.textContent || 0);
+
+            // Check if we have valid values
+            if (isNaN(currentBeta) || isNaN(currentGamma)) {
+                console.warn('Invalid position values detected');
+                return;
+            }
+
+            const accuracy = calculateAccuracy(0, currentBeta, currentGamma);
+            
+            if (accuracy >= 75) {
+                // Calculate bonus points based on accuracy
+                const accuracyBonus = Math.floor(accuracy / 10); // 10% bonus per 10% accuracy
+                const basePoints = 100 * level;
+                const totalPoints = basePoints + (basePoints * accuracyBonus / 100);
+                
+                // Calculate monetary value based on accuracy (max $10)
+                const baseValue = 10; // Maximum possible value
+                const monetaryValue = (baseValue * accuracy / 100).toFixed(2);
+                const rank = getRank(accuracy);
+                
+                score += totalPoints;
+                scoreElement.textContent = score;
+                
+                if (score % 300 === 0) {
+                    level++;
+                    levelElement.textContent = level;
+                }
+                
+                generateTargetValues();
+                sendGameData(accuracy);
+
+                // Special message for 100% accuracy
+                if (accuracy >= 100) {
+                    alert(`[CRITICAL SUCCESS] Perfect chaos alignment!\n[SYSTEM] +${totalPoints} chaos points (${accuracyBonus}% accuracy bonus)\n[ALERT] Chaos level ${level} achieved\n[RANK] S-Class Detection\n[REWARD] $${monetaryValue} chaos bounty secured\n\nCongratulations, citizen! Thank you for assisting the New New York Anomaly Prevention and End of the World corporation. You have gained one point on your social status record.`);
+                } else {
+                    alert(`[SUCCESS] Chaos source confirmed!\n[SYSTEM] +${totalPoints} chaos points (${accuracyBonus}% accuracy bonus)\n[ALERT] Chaos level ${level} detected\n[RANK] ${rank}-Class Detection\n[REWARD] $${monetaryValue} chaos bounty secured\n\nCongratulations, citizen! Thank you for assisting the New New York Anomaly Prevention and End of the World corporation. You have gained one point on your social status record.`);
+                }
+            } else {
+                const monetaryValue = (10 * accuracy / 100).toFixed(2);
+                const rank = getRank(accuracy);
+                // Calculate deduction based on how far below 75% the accuracy is
+                const deduction = ((75 - accuracy) * 0.5).toFixed(2); // Deduct $0.50 for each percentage point below 75%
+                const finalDeduction = Math.min(deduction, 5).toFixed(2); // Cap maximum deduction at $5.00
+                alert(`[WARNING] Chaos levels insufficient. Continue scanning.\n[RANK] ${rank}-Class Detection\n[REWARD] $${monetaryValue} chaos bounty available\n\nUnfortunately, you have failed, miserably. Social and monetary credits have been deducted.\n[PENALTY] -$${finalDeduction} deducted from your account\n\nCongratulations, citizen! Thank you for assisting the New New York Anomaly Prevention and End of the World corporation. You have gained one point on your social status record.`);
+            }
+        }
+
+        // Initialize game
+        generateTargetValues();
+        huntButton.addEventListener('click', checkWin);
+
+        // Device orientation setup
+        const permissionButton = document.getElementById('requestPermission');
+        const orientationStatus = document.getElementById('orientationStatus');
+
+        function updateOrientationStatus(message) {
+            orientationStatus.textContent = '[SYSTEM] ' + message;
+        }
+
+        if (window.DeviceOrientationEvent) {
+            updateOrientationStatus('Chaos detection module: READY');
+        } else {
+            updateOrientationStatus('Chaos detection module: NOT SUPPORTED');
+            permissionButton.style.display = 'none';
+        }
+
+        permissionButton.addEventListener('click', async () => {
+            try {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    updateOrientationStatus('Requesting chaos detection authorization...');
+                    const permission = await DeviceOrientationEvent.requestPermission();
+                    updateOrientationStatus(`Authorization response: ${permission}`);
+                    if (permission === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                        permissionButton.style.display = 'none';
+                        updateOrientationStatus('Chaos detection: ACTIVE');
+                    } else {
+                        updateOrientationStatus('Chaos detection: ACCESS DENIED');
+                    }
+                } else {
+                    updateOrientationStatus('Chaos detection: INITIALIZING');
+                    window.addEventListener('deviceorientation', handleOrientation);
+                    permissionButton.style.display = 'none';
+                    updateOrientationStatus('Chaos detection: ACTIVE');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                updateOrientationStatus(`Error: ${error.message}`);
+                alert('[WARNING] Chaos detection initialization failed. Ensure secure connection (HTTPS) is active.');
+            }
+        });
+
+        // Add WebSocket connection button handler
+        connectBtn.addEventListener('click', () => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                disconnectFromMax();
+            } else {
+                connectToMax();
+            }
+        });
+
+        debugBtn.addEventListener('click', () => {
+            const isDebugMode = debugInfo.style.display === 'block';
+            debugInfo.style.display = isDebugMode ? 'none' : 'block';
+            if (!isDebugMode) {
+                updateTargetDisplay();
+            }
+        });
+    </script>
+</body>
+</html> 
