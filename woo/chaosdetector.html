@@ -293,7 +293,7 @@
         let targetAlpha, targetBeta, targetGamma;
         let score = 0;
         let level = 1;
-        const baseTolerance = 15; // Base tolerance for level 1
+        const baseTolerance = 45; // Increased base tolerance for wider accuracy range
         const huntButton = document.getElementById('huntButton');
         const scoreElement = document.getElementById('score');
         const levelElement = document.getElementById('level');
@@ -378,8 +378,8 @@
             const betaDiff = Math.abs(beta - targetBeta);
             const gammaDiff = Math.abs(gamma - targetGamma);
             
-            // Adjust tolerance based on level
-            const currentTolerance = baseTolerance - (level - 1);
+            // Adjust tolerance based on level with a gentler decrease
+            const currentTolerance = baseTolerance - ((level - 1) * 0.5);
             const maxDiff = Math.max(betaDiff, gammaDiff);
             const accuracy = Math.max(0, 100 - (maxDiff * 100 / currentTolerance));
             
@@ -392,8 +392,8 @@
             const redIntensity = Math.floor((100 - accuracy) * 2.55); // Add red for contrast
             document.body.style.backgroundColor = `rgb(${redIntensity}, ${greenIntensity}, 0)`;
             
-            // Enable hunt button when close enough (lowered threshold to 75%)
-            huntButton.disabled = accuracy < 75;
+            // Enable hunt button when close enough (lowered threshold to 50%)
+            huntButton.disabled = accuracy < 50;
 
             // Add chaos effect at 100% accuracy
             if (accuracy >= 100) {
@@ -459,7 +459,7 @@
 
             const accuracy = calculateAccuracy(0, currentBeta, currentGamma);
             
-            if (accuracy >= 75) {
+            if (accuracy >= 50) {  // Lowered threshold from 75% to 50%
                 // Calculate bonus points based on accuracy
                 const accuracyBonus = Math.floor(accuracy / 10); // 10% bonus per 10% accuracy
                 const basePoints = 100 * level;
@@ -490,8 +490,8 @@
             } else {
                 const monetaryValue = (10 * accuracy / 100).toFixed(2);
                 const rank = getRank(accuracy);
-                // Calculate deduction based on how far below 75% the accuracy is
-                const deduction = ((75 - accuracy) * 0.5).toFixed(2); // Deduct $0.50 for each percentage point below 75%
+                // Calculate deduction based on how far below 50% the accuracy is
+                const deduction = ((50 - accuracy) * 0.5).toFixed(2); // Deduct $0.50 for each percentage point below 50%
                 const finalDeduction = Math.min(deduction, 5).toFixed(2); // Cap maximum deduction at $5.00
                 alert(`[WARNING] Chaos source insufficient. Continue scanning.\n[RANK] ${rank}-Class Detection\n[REWARD] $${monetaryValue} chaos bounty available\n\nUnfortunately, you have failed, miserably. Societalal and monetary credits have been deducted.\n[PENALTY] -$${finalDeduction} deducted from your account\n`);
             }
