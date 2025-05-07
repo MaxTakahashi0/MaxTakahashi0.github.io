@@ -373,14 +373,12 @@
         }
 
         function calculateAccuracy(alpha, beta, gamma) {
-            // Only use beta and gamma for accuracy calculation
+            // Only use beta for accuracy calculation
             const betaDiff = Math.abs(beta - targetBeta);
-            const gammaDiff = Math.abs(gamma - targetGamma);
             
             // Adjust tolerance based on level with a gentler decrease
             const currentTolerance = baseTolerance - ((level - 1) * 0.5);
-            const maxDiff = Math.max(betaDiff, gammaDiff);
-            const accuracy = Math.max(0, 100 - (maxDiff * 100 / currentTolerance));
+            const accuracy = Math.max(0, 100 - (betaDiff * 100 / currentTolerance));
             
             return accuracy;
         }
@@ -413,7 +411,7 @@
             const gamma = event.gamma !== null ? Math.round(event.gamma) : 0;
 
             // Check if we have valid orientation data
-            if (beta === null || gamma === null) {
+            if (beta === null) {
                 console.warn('Invalid orientation data received');
                 return;
             }
@@ -448,15 +446,14 @@
         function checkWin() {
             // Get current values from display
             const currentBeta = parseInt(document.getElementById('currentBeta')?.textContent || 0);
-            const currentGamma = parseInt(document.getElementById('currentGamma')?.textContent || 0);
 
             // Check if we have valid values
-            if (isNaN(currentBeta) || isNaN(currentGamma)) {
+            if (isNaN(currentBeta)) {
                 console.warn('Invalid position values detected');
                 return;
             }
 
-            const accuracy = calculateAccuracy(0, currentBeta, currentGamma);
+            const accuracy = calculateAccuracy(0, currentBeta, 0);
             
             if (accuracy >= 50) {  // Lowered threshold from 75% to 50%
                 // Calculate bonus points based on accuracy
