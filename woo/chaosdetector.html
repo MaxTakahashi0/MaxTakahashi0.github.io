@@ -277,9 +277,9 @@
 
         <div class="instructions">
             <p>[INIT] Chaos detection protocol active.</p>
-            <p>[ALERT] Move device to locate chaotic patterns.</p>
-            <p>[WARNING] Screen will indicate proximity to chaos source.</p>
-            <p>[SYSTEM] Confirm position when chaos levels peak.</p>
+            <p>[SYSTEM] Move device to locate anomalies.</p>
+            <p>[SYSTEM] Screen will indicate proximity to anomaly source.</p>
+            <p>[SYSTEM] Confirm position when levels peak.</p>
         </div>
 
         <div class="level">Currect Chaos Level: <span id="level">1</span></div>
@@ -358,7 +358,7 @@
 
         function generateTargetValues() {
             targetAlpha = Math.floor(Math.random() * 360);
-            targetBeta = Math.floor(Math.random() * 180) - 90;
+            targetBeta = Math.floor(Math.random() * 140) + 10;
             targetGamma = Math.floor(Math.random() * 180) - 90;
             updateTargetDisplay();
             sendGameData();
